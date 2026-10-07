@@ -64,6 +64,12 @@ I titoli `##` e `###` finiscono da soli nell'indice "In questa pagina".
 
 > In MDX i caratteri `<` e `{` hanno un significato speciale. Se ti servono nel testo, scrivi `\<` e `\{`.
 
+### Pagine fisse
+
+Chi sono, Privacy policy, Cookie policy e Note legali sono file in `pagine/`. Si modificano come gli appunti.
+
+> **Prima di andare online** apri `pagine/privacy.mdx`, inserisci nome ed email del titolare e cancella il riquadro "Da completare".
+
 ## Deploy su Vercel
 
 1. Su [vercel.com](https://vercel.com) → **Add New → Project** → importa questo repository.
@@ -78,4 +84,5 @@ app/                                  pagine
 components/                           interfaccia
 lib/content.ts                        lettura dei contenuti
 lib/site.ts                           nome, slogan, dominio
+pagine/                               Chi sono, Privacy, Cookie, Note legali
 ```
