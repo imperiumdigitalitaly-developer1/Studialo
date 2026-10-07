@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 export type SearchItem = {
@@ -19,6 +20,7 @@ function normalize(text: string) {
 }
 
 export function Search({ items }: { items: SearchItem[] }) {
+  const router = useRouter();
   const [query, setQuery] = useState("");
 
   const indexed = useMemo(
@@ -39,36 +41,41 @@ export function Search({ items }: { items: SearchItem[] }) {
       : indexed.filter(({ haystack }) => terms.every((t) => haystack.includes(t))).slice(0, 8);
 
   return (
-    <div>
-      <label htmlFor="cerca-input" className="sr-only">
-        Cerca negli appunti
-      </label>
-      <div className="relative">
-        <svg
-          aria-hidden
-          viewBox="0 0 20 20"
-          className="pointer-events-none absolute top-1/2 left-4 size-5 -translate-y-1/2 text-fg-muted"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.8"
-        >
-          <circle cx="8.5" cy="8.5" r="5.5" />
-          <path d="m13 13 4 4" strokeLinecap="round" />
-        </svg>
+    <div className="relative">
+      <form
+        role="search"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (results[0]) router.push(results[0].item.href);
+        }}
+        className="flex items-center gap-2 rounded-2xl border border-line bg-bg p-2 shadow-xl shadow-[#141b34]/[0.05] transition focus-within:border-accent/50 focus-within:ring-4 focus-within:ring-accent/10"
+      >
+        <label htmlFor="cerca-input" className="sr-only">
+          Cerca negli appunti
+        </label>
         <input
           id="cerca-input"
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Cerca un argomento…"
+          placeholder="Materia o argomento…"
           autoComplete="off"
           enterKeyHint="search"
-          className="h-12 w-full rounded-2xl border border-line bg-bg-soft pr-4 pl-12 text-base text-fg outline-none transition placeholder:text-fg-muted focus:border-accent focus:bg-bg focus:ring-4 focus:ring-accent/15"
+          className="h-12 min-w-0 flex-1 bg-transparent px-3 text-base text-fg outline-none placeholder:text-fg-muted"
         />
-      </div>
+        <button
+          type="submit"
+          className="h-12 shrink-0 rounded-xl bg-accent px-5 font-bold text-white transition hover:brightness-110 active:scale-[0.98] sm:px-7"
+        >
+          Cerca
+        </button>
+      </form>
 
       {terms.length > 0 && (
-        <div className="mt-3 overflow-hidden rounded-2xl border border-line" aria-live="polite">
+        <div
+          className="absolute inset-x-0 top-full z-30 mt-2 overflow-hidden rounded-2xl border border-line bg-bg text-left shadow-2xl shadow-[#141b34]/10"
+          aria-live="polite"
+        >
           {results.length === 0 ? (
             <p className="px-5 py-4 text-sm text-fg-muted">Nessun risultato. Prova con un’altra parola.</p>
           ) : (
@@ -76,8 +83,10 @@ export function Search({ items }: { items: SearchItem[] }) {
               {results.map(({ item }) => (
                 <li key={item.href}>
                   <Link href={item.href} className="block px-5 py-3.5 transition-colors hover:bg-bg-soft">
-                    <span className="block text-xs font-medium text-accent">{item.materia}</span>
-                    <span className="block font-medium text-fg">{item.title}</span>
+                    <span className="block text-[11px] font-bold tracking-[0.14em] text-accent uppercase">
+                      {item.materia}
+                    </span>
+                    <span className="mt-0.5 block font-bold text-fg">{item.title}</span>
                     {item.description && (
                       <span className="mt-0.5 block line-clamp-1 text-sm text-fg-muted">
                         {item.description}

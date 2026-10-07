@@ -3,25 +3,29 @@
 
 :root {
   --bg: #ffffff;
-  --bg-soft: #f5f5f7;
-  --fg: #1d1d1f;
-  --fg-muted: #6e6e73;
-  --line: #e5e5ea;
+  --bg-soft: #f5f7fb;
+  --fg: #141b34;
+  --fg-muted: #5b6478;
+  --line: #e3e8f0;
   --accent: #0071e3;
   --accent-soft: #e8f1fc;
-  --nav-bg: rgb(255 255 255 / 0.8);
+  --navy: #1a2340;
+  --nav-bg: rgb(255 255 255 / 0.85);
+  --grid-line: rgb(20 27 52 / 0.04);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #000000;
-    --bg-soft: #1c1c1e;
-    --fg: #f5f5f7;
-    --fg-muted: #a1a1a6;
-    --line: #2c2c2e;
-    --accent: #2997ff;
-    --accent-soft: #0b2540;
-    --nav-bg: rgb(0 0 0 / 0.75);
+    --bg: #0b1020;
+    --bg-soft: #10162b;
+    --fg: #eef1f8;
+    --fg-muted: #9aa3b8;
+    --line: #222b45;
+    --accent: #3d95ff;
+    --accent-soft: rgb(61 149 255 / 0.14);
+    --navy: #141c35;
+    --nav-bg: rgb(11 16 32 / 0.8);
+    --grid-line: rgb(255 255 255 / 0.035);
   }
 }
 
@@ -33,13 +37,39 @@
   --color-line: var(--line);
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
+  --color-navy: var(--navy);
   --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto,
     "Helvetica Neue", Arial, sans-serif;
 }
 
+/* Titoli grandi, pesanti e compatti */
+@utility display {
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+
+/* Etichetta blu in maiuscolo sopra i titoli */
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Sfondo a griglia leggera della hero */
+@utility bg-grid {
+  background-color: var(--bg-soft);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
 html {
   -webkit-text-size-adjust: 100%;
-  scroll-padding-top: 4.5rem;
+  scroll-padding-top: 5.5rem;
 }
 
 body {

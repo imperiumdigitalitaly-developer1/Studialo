@@ -19,11 +19,17 @@ export type Chapter = {
   headings: Heading[];
 };
 
+export const COLORS = ["blu", "viola", "verde", "ambra"] as const;
+export type Color = (typeof COLORS)[number];
+
 export type Materia = {
   slug: string;
   title: string;
   description?: string;
   order: number;
+  /** Sigla mostrata nel riquadro colorato, es. "DP". */
+  sigla: string;
+  color: Color;
   chapters: Chapter[];
 };
 
@@ -100,7 +106,7 @@ function readChapter(materia: string, file: string): Chapter | null {
   };
 }
 
-function readMateria(slug: string): Materia {
+function readMateria(slug: string): Omit<Materia, "color"> & { color?: Color } {
   const dir = path.join(CONTENT_DIR, slug);
   const files = fs.readdirSync(dir);
 
@@ -115,13 +121,23 @@ function readMateria(slug: string): Materia {
     .filter((c): c is Chapter => c !== null)
     .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "it"));
 
+  const title = typeof meta.title === "string" ? meta.title : humanize(slug);
   return {
     slug,
-    title: typeof meta.title === "string" ? meta.title : humanize(slug),
+    title,
     description: typeof meta.description === "string" ? meta.description : undefined,
     order: typeof meta.order === "number" ? meta.order : Number.POSITIVE_INFINITY,
+    sigla: typeof meta.sigla === "string" ? meta.sigla.slice(0, 3) : makeSigla(title),
+    color: COLORS.includes(meta.color as Color) ? (meta.color as Color) : undefined,
     chapters,
   };
+}
+
+// "Diritto Privato" -> "DP", "Matematica" -> "MAT"
+function makeSigla(title: string) {
+  const words = title.split(/\s+/).filter((w) => w.length > 2);
+  if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+  return title.slice(0, 3).toUpperCase();
 }
 
 let cache: Materia[] | null = null;
@@ -134,8 +150,17 @@ export function getMaterie(): Materia[] {
     .filter((d) => d.isDirectory() && !d.name.startsWith(".") && !d.name.startsWith("_"))
     .map((d) => readMateria(d.name))
     .filter((m) => m.chapters.length > 0)
-    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "it"));
+    .sort((a, b) => a.order - b.order || a.title.localeCompare(b.title, "it"))
+    // Se il colore non è indicato, le materie si alternano tra i quattro colori.
+    .map((m, i) => ({ ...m, color: m.color ?? COLORS[i % COLORS.length] }));
   return cache;
+}
+
+export function getRecentChapters(limit = 6) {
+  return getMaterie()
+    .flatMap((m) => m.chapters.map((chapter) => ({ chapter, materia: m })))
+    .sort((a, b) => (b.chapter.updated ?? "").localeCompare(a.chapter.updated ?? ""))
+    .slice(0, limit);
 }
 
 export function getMateria(slug: string) {

@@ -8,6 +8,7 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { ReadingProgress } from "@/components/ReadingProgress";
 import { TocDesktop, TocMobile } from "@/components/TableOfContents";
 import { mdxComponents } from "@/components/mdx";
+import { Chip, cardClass } from "@/components/ui";
 import { formatDate, getChapter, getMaterie } from "@/lib/content";
 import { site } from "@/lib/site";
 
@@ -69,8 +70,8 @@ export default async function CapitoloPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <div className="mx-auto max-w-5xl px-5 pt-8 lg:grid lg:grid-cols-[minmax(0,1fr)_14rem] lg:gap-12">
-        <article className="min-w-0 max-w-[42rem]">
+      <section className="bg-grid border-b border-line">
+        <div className="mx-auto max-w-6xl px-5 pt-8 pb-12 sm:pb-14">
           <Breadcrumbs
             items={[
               { href: "/", label: "Home" },
@@ -78,26 +79,35 @@ export default async function CapitoloPage({ params }: Props) {
               { label: chapter.title },
             ]}
           />
-
-          <header className="mt-6">
-            <p className="text-sm font-medium text-accent">
-              {m.title} · Argomento {index + 1} di {m.chapters.length}
+          <div className="mt-10 max-w-3xl">
+            <p className="eyebrow">
+              Appunti ·{" "}
+              <Link href={`/${m.slug}`} className="underline decoration-2 underline-offset-4">
+                {m.title}
+              </Link>
             </p>
-            <h1 className="mt-2 text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-5xl">
-              {chapter.title}
-            </h1>
+            <h1 className="display mt-4 text-4xl text-balance sm:text-6xl">{chapter.title}</h1>
             {chapter.description && (
-              <p className="mt-3 text-lg text-pretty text-fg-muted">{chapter.description}</p>
+              <p className="mt-5 text-lg leading-relaxed text-pretty text-fg-muted sm:text-xl">
+                {chapter.description}
+              </p>
             )}
-            <p className="mt-4 text-sm text-fg-muted">
-              {chapter.readingMinutes} min di lettura
-              {chapter.updated && <> · Aggiornato il {formatDate(chapter.updated)}</>}
-            </p>
-          </header>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Chip>
+                Argomento {index + 1} di {m.chapters.length}
+              </Chip>
+              <Chip>{chapter.readingMinutes} min di lettura</Chip>
+              {chapter.updated && <Chip tone="green">Aggiornato il {formatDate(chapter.updated)}</Chip>}
+            </div>
+          </div>
+        </div>
+      </section>
 
+      <div className="mx-auto max-w-6xl px-5 lg:grid lg:grid-cols-[minmax(0,1fr)_17rem] lg:gap-16">
+        <article className="min-w-0 max-w-[44rem]">
           <TocMobile headings={chapter.headings} />
 
-          <div className="prose prose-lg prose-studialo mt-10 max-w-none prose-headings:font-semibold prose-h2:mt-12 prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-img:rounded-2xl">
+          <div className="prose prose-lg prose-studialo mt-10 max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-h2:mt-14 prose-h2:text-3xl prose-a:font-semibold prose-a:no-underline hover:prose-a:underline prose-img:rounded-2xl">
             <MDXRemote
               source={chapter.body}
               components={mdxComponents}
@@ -107,42 +117,32 @@ export default async function CapitoloPage({ params }: Props) {
             />
           </div>
 
-          <nav
-            aria-label="Altri argomenti"
-            className="mt-16 grid gap-3 border-t border-line pt-8 sm:grid-cols-2"
-          >
+          <nav aria-label="Altri argomenti" className="mt-16 grid gap-4 sm:grid-cols-2">
             {prev ? (
-              <Link
-                href={`/${m.slug}/${prev.slug}`}
-                className="rounded-2xl bg-bg-soft px-5 py-4 transition hover:shadow-md hover:shadow-black/5"
-              >
-                <span className="block text-xs text-fg-muted">← Precedente</span>
-                <span className="mt-1 block font-medium">{prev.title}</span>
+              <Link href={`/${m.slug}/${prev.slug}`} className={`block p-6 ${cardClass}`}>
+                <span className="eyebrow">← Precedente</span>
+                <span className="mt-2 block text-lg font-extrabold tracking-tight">{prev.title}</span>
               </Link>
             ) : (
               <span className="hidden sm:block" />
             )}
             {next ? (
-              <Link
-                href={`/${m.slug}/${next.slug}`}
-                className="rounded-2xl bg-bg-soft px-5 py-4 text-right transition hover:shadow-md hover:shadow-black/5"
-              >
-                <span className="block text-xs text-fg-muted">Successivo →</span>
-                <span className="mt-1 block font-medium">{next.title}</span>
+              <Link href={`/${m.slug}/${next.slug}`} className={`block p-6 text-right ${cardClass}`}>
+                <span className="eyebrow">Successivo →</span>
+                <span className="mt-2 block text-lg font-extrabold tracking-tight">{next.title}</span>
               </Link>
             ) : (
-              <Link
-                href={`/${m.slug}`}
-                className="rounded-2xl bg-bg-soft px-5 py-4 text-right transition hover:shadow-md hover:shadow-black/5"
-              >
-                <span className="block text-xs text-fg-muted">Fine della materia</span>
-                <span className="mt-1 block font-medium">Torna a {m.title}</span>
+              <Link href={`/${m.slug}`} className={`block p-6 text-right ${cardClass}`}>
+                <span className="eyebrow">Fine della materia</span>
+                <span className="mt-2 block text-lg font-extrabold tracking-tight">
+                  Torna a {m.title} →
+                </span>
               </Link>
             )}
           </nav>
         </article>
 
-        <aside className="hidden lg:block">
+        <aside className="hidden pt-10 lg:block">
           <TocDesktop headings={chapter.headings} />
         </aside>
       </div>

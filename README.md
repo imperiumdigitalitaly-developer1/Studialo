@@ -41,10 +41,14 @@ Crea il file `content/nome-materia/_materia.md`:
 title: Diritto Commerciale
 description: Una frase sulla materia.
 order: 3
+sigla: DC      # facoltativa, max 3 lettere (di default: iniziali del nome)
+color: verde   # facoltativo: blu, viola, verde o ambra
 ---
 ```
 
-Poi aggiungi gli argomenti nella stessa cartella. Senza `_materia.md` il nome viene preso dalla cartella.
+Poi aggiungi gli argomenti nella stessa cartella. Senza `_materia.md` il nome viene preso dalla cartella e i colori si alternano da soli.
+
+La home mostra in evidenza gli argomenti con la data `updated` più recente.
 
 ### Riquadri speciali
 

@@ -26,7 +26,7 @@ export function ReadingProgress() {
   }, []);
 
   return (
-    <div aria-hidden className="fixed inset-x-0 top-12 z-40 h-0.5">
+    <div aria-hidden className="fixed inset-x-0 top-16 z-40 h-0.5">
       <div
         className="h-full origin-left bg-accent"
         style={{ transform: `scaleX(${progress})` }}
