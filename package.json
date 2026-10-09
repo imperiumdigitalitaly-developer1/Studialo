@@ -9,7 +9,7 @@
     "lint": "tsc --noEmit"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.9"
   },
   "dependencies": {
     "github-slugger": "^2.0.0",
