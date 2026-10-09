@@ -1,0 +1,149 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f5f7fb;
+  --fg: #141b34;
+  --fg-muted: #5b6478;
+  --line: #e3e8f0;
+  --accent: #0071e3;
+  --accent-soft: #e8f1fc;
+  --navy: #1a2340;
+  --nav-bg: rgb(255 255 255 / 0.85);
+  --grid-line: rgb(20 27 52 / 0.04);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1020;
+    --bg-soft: #10162b;
+    --fg: #eef1f8;
+    --fg-muted: #9aa3b8;
+    --line: #222b45;
+    --accent: #3d95ff;
+    --accent-soft: rgb(61 149 255 / 0.14);
+    --navy: #141c35;
+    --nav-bg: rgb(11 16 32 / 0.8);
+    --grid-line: rgb(255 255 255 / 0.035);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-soft: var(--bg-soft);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-navy: var(--navy);
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Titoli grandi, pesanti e compatti */
+@utility display {
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+
+/* Etichetta blu in maiuscolo sopra i titoli */
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Sfondo a griglia leggera della hero */
+@utility bg-grid {
+  background-color: var(--bg-soft);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Testo degli appunti */
+.prose-studialo {
+  --tw-prose-body: var(--fg);
+  --tw-prose-headings: var(--fg);
+  --tw-prose-lead: var(--fg-muted);
+  --tw-prose-links: var(--accent);
+  --tw-prose-bold: var(--fg);
+  --tw-prose-counters: var(--fg-muted);
+  --tw-prose-bullets: var(--fg-muted);
+  --tw-prose-hr: var(--line);
+  --tw-prose-quotes: var(--fg);
+  --tw-prose-quote-borders: var(--accent);
+  --tw-prose-captions: var(--fg-muted);
+  --tw-prose-code: var(--fg);
+  --tw-prose-pre-code: var(--fg);
+  --tw-prose-pre-bg: var(--bg-soft);
+  --tw-prose-th-borders: var(--line);
+  --tw-prose-td-borders: var(--line);
+}
+
+.prose-studialo :where(h2, h3) {
+  letter-spacing: -0.01em;
+}
+
+.prose-studialo :where(h2, h3) > a.heading-anchor {
+  color: inherit;
+  text-decoration: none;
+}
+
+.prose-studialo :where(code):not(:where(pre code)) {
+  background: var(--bg-soft);
+  border-radius: 0.375rem;
+  padding: 0.15em 0.35em;
+  font-weight: 500;
+}
+
+.prose-studialo :where(code):not(:where(pre code))::before,
+.prose-studialo :where(code):not(:where(pre code))::after {
+  content: none;
+}
+
+.prose-studialo :where(blockquote) {
+  font-style: normal;
+  font-weight: 400;
+}
+
+.prose-studialo :where(blockquote p)::before,
+.prose-studialo :where(blockquote p)::after {
+  content: none;
+}
+
+/* Le tabelle larghe scorrono in orizzontale invece di rompere la pagina */
+.prose-studialo .table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1.5em 0;
+}
+
+.prose-studialo .table-wrap table {
+  margin: 0;
+  min-width: 100%;
+}
